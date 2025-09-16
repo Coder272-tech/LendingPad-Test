@@ -7,10 +7,11 @@ namespace Core.Services.Users
     [AutoRegister(AutoRegisterTypes.Singleton)]
     public class UpdateUserService : IUpdateUserService
     {
-        public void Update(User user, string name, string email, UserTypes type, decimal? annualSalary, IEnumerable<string> tags)
+        public void Update(User user, string name, string email, int age, UserTypes type, decimal? annualSalary, IEnumerable<string> tags)
         {
             user.SetEmail(email);
             user.SetName(name);
+            user.SetAge(age);
             user.SetType(type);
             if (annualSalary.HasValue)
             {

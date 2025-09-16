@@ -33,7 +33,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var user = _createUserService.Create(userId, model.Name, model.Email, model.Type, model.AnnualSalary, model.Tags);
+                var user = _createUserService.Create(userId, model.Name, model.Email, model.Age, model.Type, model.AnnualSalary, model.Tags);
                 return Found(new UserData(user));
             }
             catch (UserAlreadyExistsException ex)
@@ -59,7 +59,7 @@ namespace WebApi.Controllers
                 {
                     return DoesNotExist();
                 }
-                _updateUserService.Update(user, model.Name, model.Email, model.Type, model.AnnualSalary, model.Tags);
+                _updateUserService.Update(user, model.Name, model.Email, model.Age, model.Type, model.AnnualSalary, model.Tags);
                 return Found(new UserData(user));
             }
             catch (ArgumentNullException ex)
@@ -103,7 +103,7 @@ namespace WebApi.Controllers
 
         [Route("list")]
         [HttpGet]
-        public HttpResponseMessage GetUsers(int skip, int take, UserTypes? type = null, string name = null, string email = null)
+        public HttpResponseMessage GetUsers(int skip, int take, UserTypes? type = null, string name = null, string email = null, int? age = null)
         {
             var users = _getUserService.GetUsers(type, name, email)
                                        .Skip(skip).Take(take)
