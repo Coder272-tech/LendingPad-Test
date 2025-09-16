@@ -52,13 +52,32 @@ namespace WebApi.Controllers
         [HttpPost]
         public HttpResponseMessage UpdateUser(Guid userId, [FromBody] UserModel model)
         {
-            var user = _getUserService.GetUser(userId);
-            if (user == null)
+            try
             {
-                return DoesNotExist();
+                var user = _getUserService.GetUser(userId);
+                if (user == null)
+                {
+                    return DoesNotExist();
+                }
+                _updateUserService.Update(user, model.Name, model.Email, model.Type, model.AnnualSalary, model.Tags);
+                return Found(new UserData(user));
             }
-            _updateUserService.Update(user, model.Name, model.Email, model.Type, model.AnnualSalary, model.Tags);
-            return Found(new UserData(user));
+            catch (ArgumentNullException ex)
+            {
+                var error = new ApiError
+                {
+                    Message = ex.Message,
+                    Code = "NULL_ARGUMENT" // optional
+                };
+
+                /*
+                 400 Bad Request.
+                Reason: The client request was syntactically valid JSON, but semantically invalid for your business/domain rules (email cannot be null).
+                 */
+
+                return Request.CreateResponse(HttpStatusCode.BadRequest, error);
+            }
+            
         }
 
         [Route("{userId:guid}/delete")]
