@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using BusinessEntities;
 using Core.Services.Users;
 using WebApi.Models.Users;
+using WebApi.Models;
+using static Core.Exceptions.UserExceptions;
 
 namespace WebApi.Controllers
 {
@@ -28,8 +31,21 @@ namespace WebApi.Controllers
         [HttpPost]
         public HttpResponseMessage CreateUser(Guid userId, [FromBody] UserModel model)
         {
-            var user = _createUserService.Create(userId, model.Name, model.Email, model.Type, model.AnnualSalary, model.Tags);
-            return Found(new UserData(user));
+            try
+            {
+                var user = _createUserService.Create(userId, model.Name, model.Email, model.Type, model.AnnualSalary, model.Tags);
+                return Found(new UserData(user));
+            }
+            catch (UserAlreadyExistsException ex)
+            {
+                var error = new ApiError
+                {
+                    Message = ex.Message,
+                    Code = "USER_ALREADY_EXISTS" // optional
+                };
+                return Request.CreateResponse(HttpStatusCode.Conflict, error);
+            }
+
         }
 
         [Route("{userId:guid}/update")]
