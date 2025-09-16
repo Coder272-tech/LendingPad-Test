@@ -124,7 +124,12 @@ namespace WebApi.Controllers
         [HttpGet]
         public HttpResponseMessage GetUsersByTag(string tag)
         {
-            throw new NotImplementedException();
+            // Call GetUsers with tag (null or empty tag will return all users)
+            var users = _getUserService.GetUsers(tag: string.IsNullOrWhiteSpace(tag) ? null : tag)
+                                       .Select(u => new UserData(u))
+                                       .ToList();
+
+            return Found(users);
         }
     }
 }
