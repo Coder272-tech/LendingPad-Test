@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Filters;
+using Data.UnitOfWork;
 using Raven.Client;
 
 namespace WebApi.App_Start
@@ -15,8 +16,13 @@ namespace WebApi.App_Start
             var method = actionExecutedContext.Request.Method;
             if (method == HttpMethod.Post || method == HttpMethod.Put || method == HttpMethod.Delete)
             {
+                /*
                 var session = (IDocumentSession)container.GetService(typeof(IDocumentSession));
                 session.SaveChanges();
+                */
+
+                var uow = (IUnitOfWork)container.GetService(typeof(IUnitOfWork));
+                uow?.Commit();
             }
         }
     }

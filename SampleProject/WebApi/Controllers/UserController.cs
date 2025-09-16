@@ -120,6 +120,25 @@ namespace WebApi.Controllers
             return Found();
         }
 
+        // 🔹 Debug endpoint: get all users
+        [HttpGet]
+        [Route("debug/all")]
+        public IHttpActionResult GetAllUsers()
+        {
+            var users = _getUserService.GetUsers()
+                .Select(u => new {
+                    u.Id,
+                    u.Name,
+                    u.Email,
+                    u.Type,
+                    u.Age,
+                    u.MonthlySalary,
+                    Tags = u.Tags.ToArray()
+                });
+
+            return Ok(users);
+        }
+
         [Route("list/tag")]
         [HttpGet]
         public HttpResponseMessage GetUsersByTag(string tag)

@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System.Configuration;
+using System.Web.Http;
 using System.Web.Http.Filters;
 using Common;
 using Core;
@@ -24,7 +25,9 @@ namespace WebApi
             var assembly = typeof(WebApiConfig).Assembly;
             InitializeAssemblyInstancesService.Initialize(container, lifestyle, assembly);
 
-            DataConfiguration.Initialize(container, lifestyle);
+            bool useRaven = bool.Parse(ConfigurationManager.AppSettings["UseRavenDb"] ?? "true");
+
+            DataConfiguration.Initialize(container, lifestyle, true, useRaven);
             CoreConfiguration.Initialize(container, lifestyle);
 
             container.RegisterWebApiControllers(config);
