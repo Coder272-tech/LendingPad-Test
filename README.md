@@ -1,5 +1,13 @@
 # LendingPad Test
 
+## Important
+Please check out the tag **`test-complete`** from branch **`TT-1`** for the final submission.
+
+```bash
+git fetch --all --tags
+git checkout tags/test-complete
+```
+
 ## Known Issues
 - Missing roslyn folder ([Issue #1](https://github.com/Coder272-tech/LendingPad-Test/issues/1))
 
@@ -18,5 +26,4 @@
 * Implement in-memory data provider ([Issue #8](https://github.com/Coder272-tech/LendingPad-Test/issues/8))
 * a), b), c) Task 2 tasks for new Product entity ([Issue #9](https://github.com/Coder272-tech/LendingPad-Test/issues/9))
 * a), b), c) Task 2 tasks for new Order entity ([Issue #10](https://github.com/Coder272-tech/LendingPad-Test/issues/10)), please pay attention to **Note in Issue writeup.
-
 
