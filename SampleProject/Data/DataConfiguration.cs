@@ -45,9 +45,8 @@ namespace Data
                 // --------------------------
                 container.Register<IUserRepository, InMemoryUserRepository>(Lifestyle.Singleton);
 
-                // If you later implement Product/Order in-memory repositories, register them here similarly:
                 container.Register<IProductRepository, InMemoryProductRepository>(Lifestyle.Singleton);
-                // container.Register<IRepository<Order>, InMemoryOrderRepository>(Lifestyle.Singleton);
+                container.Register<IOrderRepository, InMemoryOrderRepository>(Lifestyle.Singleton);
             }
 
         }

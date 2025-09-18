@@ -311,6 +311,66 @@
 							"response": []
 						},
 						{
+							"name": "Create Product B",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"IPad\",\r\n    \"description\": \"iPad\",\r\n    \"price\": 1800.99,\r\n    \"stockQuantity\": 100,\r\n    \"tags\": [\"electronics\", \"gaming\", \"apple\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:49834/products/f79ee12d-f549-4247-9d33-3d4e45411e2b/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "49834",
+									"path": [
+										"products",
+										"f79ee12d-f549-4247-9d33-3d4e45411e2b",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Product C",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Dell 2\",\r\n    \"description\": \"Dell Laptop\",\r\n    \"price\": 900.00,\r\n    \"stockQuantity\": 3,\r\n    \"tags\": [\"electronics\", \"gaming\", \"windows\", \"dell\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:49834/products/3e08d460-6d91-434c-9550-b6ebe5958bb7/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "49834",
+									"path": [
+										"products",
+										"3e08d460-6d91-434c-9550-b6ebe5958bb7",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Update Product",
 							"request": {
 								"method": "POST",
@@ -454,7 +514,114 @@
 				},
 				{
 					"name": "Orders",
-					"item": []
+					"item": [
+						{
+							"name": "Create Order A",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": \"00000000-0000-0000-0000-000000000001\",\r\n  \"productId\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"userId\": \"22222222-2222-2222-2222-222222222222\",\r\n  \"quantity\": 5,\r\n  \"totalPrice\": 125.50,\r\n  \"orderDate\": \"2025-09-17T10:30:00Z\",\r\n  \"tags\": [\"priority\", \"gift\"],\r\n  \"orderStatus\": \"Pending\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:49834/orders/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "49834",
+									"path": [
+										"orders",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Orders",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:49834/orders/debug/all",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "49834",
+									"path": [
+										"orders",
+										"debug",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Order List (filters)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:49834/orders/list?fromDate=2025-09-16T00:00:00Z&toDate=2025-09-17T23:59:59Z",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "49834",
+									"path": [
+										"orders",
+										"list"
+									],
+									"query": [
+										{
+											"key": "userId",
+											"value": "22222222-2222-2222-2222-222222222222",
+											"disabled": true
+										},
+										{
+											"key": "fromDate",
+											"value": "2025-09-16T00:00:00Z"
+										},
+										{
+											"key": "toDate",
+											"value": "2025-09-17T23:59:59Z"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Order",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:49834/orders/00000000-0000-0000-0000-000000000003/delete",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "49834",
+									"path": [
+										"orders",
+										"00000000-0000-0000-0000-000000000003",
+										"delete"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		}
