@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "edaec57c-3aad-4b0f-ac27-8326013d1ed0",
+		"_postman_id": "fecc6934-8c01-4d3b-9e7d-63a2a77e8070",
 		"name": "LendingPad-SampleProject",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "48308423",
-		"_collection_link": "https://aeg2160-4a389070-4238643.postman.co/workspace/agpostman's-Workspace~85d04d3c-755a-4595-825c-470663913eae/collection/48308423-edaec57c-3aad-4b0f-ac27-8326013d1ed0?action=share&source=collection_link&creator=48308423"
+		"_collection_link": "https://aeg2160-4a389070-4238643.postman.co/workspace/agpostman's-Workspace~85d04d3c-755a-4595-825c-470663913eae/collection/48308423-fecc6934-8c01-4d3b-9e7d-63a2a77e8070?action=share&source=collection_link&creator=48308423"
 	},
 	"item": [
 		{
@@ -545,12 +545,21 @@
 							"response": []
 						},
 						{
-							"name": "Get All Orders",
+							"name": "Create Order B",
 							"request": {
-								"method": "GET",
+								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": \"00000000-0000-0000-0000-000000000002\",\r\n  \"productId\": \"33333333-3333-3333-3333-333333333333\",\r\n  \"userId\": \"44444444-4444-4444-4444-444444444444\",\r\n  \"quantity\": 2,\r\n  \"totalPrice\": 49.99,\r\n  \"orderDate\": \"2025-09-17T14:45:00Z\",\r\n  \"tags\": [\"standard\"],\r\n  \"orderStatus\": \"Pending\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
-									"raw": "http://localhost:49834/orders/debug/all",
+									"raw": "http://localhost:49834/orders/create",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -558,8 +567,98 @@
 									"port": "49834",
 									"path": [
 										"orders",
-										"debug",
-										"all"
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Order C",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": \"00000000-0000-0000-0000-000000000003\",\r\n  \"productId\": \"55555555-5555-5555-5555-555555555555\",\r\n  \"userId\": \"66666666-6666-6666-6666-666666666666\",\r\n  \"quantity\": 1,\r\n  \"totalPrice\": 299.99,\r\n  \"orderDate\": \"2025-09-18T09:15:00Z\",\r\n  \"tags\": [\"express\", \"gift\"],\r\n  \"orderStatus\": \"Processing\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:49834/orders/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "49834",
+									"path": [
+										"orders",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Order By Id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:49834/orders/00000000-0000-0000-0000-000000000002",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "49834",
+									"path": [
+										"orders",
+										"00000000-0000-0000-0000-000000000002"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Order",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"productId\": \"33333333-3333-3333-3333-333333333333\",\r\n  \"userId\": \"44444444-4444-4444-4444-444444444444\",\r\n  \"quantity\": 2,\r\n  \"totalPrice\": 20.00,\r\n  \"orderDate\": \"2025-09-17T14:45:00Z\",\r\n  \"tags\": [\"standard\"],\r\n  \"orderStatus\": \"Pending\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:49834/orders/00000000-0000-0000-0000-000000000002/update",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "49834",
+									"path": [
+										"orders",
+										"00000000-0000-0000-0000-000000000002",
+										"update"
 									]
 								}
 							},
@@ -595,6 +694,27 @@
 											"key": "toDate",
 											"value": "2025-09-17T23:59:59Z"
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Orders",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:49834/orders/debug/all",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "49834",
+									"path": [
+										"orders",
+										"debug",
+										"all"
 									]
 								}
 							},
