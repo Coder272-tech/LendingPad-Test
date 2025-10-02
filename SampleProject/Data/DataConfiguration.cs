@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using BusinessEntities;
 using Common;
+using Data.Repositories;
+using Data.UnitOfWork;
 using Raven.Client;
 using Raven.Client.Document;
 using Raven.Client.Indexes;
@@ -11,8 +13,9 @@ namespace Data
 {
     public class DataConfiguration
     {
-        public static void Initialize(Container container, Lifestyle lifestyle, bool createIndexes = true)
+        public static void Initialize(Container container, Lifestyle lifestyle, bool createIndexes = true, bool useRaven = true)
         {
+            container.Options.AllowOverridingRegistrations = true;
             var assembly = typeof(DataConfiguration).Assembly;
 
             container.RegisterSingleton<IListTypeLookup<Assembly>, ListTypeLookup<Assembly>>();
@@ -21,14 +24,31 @@ namespace Data
             InitializeAssemblyInstancesService.RegisterAssemblyWithSerializableTypes(container, assembly);
 
             InitializeAssemblyInstancesService.Initialize(container, lifestyle, assembly);
-            container.RegisterSingleton(() => InitializeDocumentStore(assembly, createIndexes));
 
-            container.Register(() =>
-                               {
-                                   var session = container.GetInstance<IDocumentStore>().OpenSession();
-                                   session.Advanced.MaxNumberOfRequestsPerSession = 5000;
-                                   return session;
-                               }, lifestyle);
+            if (useRaven)
+            {
+                container.RegisterSingleton(() => InitializeDocumentStore(assembly, createIndexes));
+
+                container.Register(() =>
+                {
+                    var session = container.GetInstance<IDocumentStore>().OpenSession();
+                    session.Advanced.MaxNumberOfRequestsPerSession = 5000;
+                    return session;
+                }, lifestyle);
+                container.Register<IUnitOfWork, RavenUnitOfWork>(lifestyle);
+            }
+            else
+            {
+                container.Register<IUnitOfWork, InMemoryUnitOfWork>(lifestyle);
+                // --------------------------
+                // 🔹 In-memory repository registrations
+                // --------------------------
+                container.Register<IUserRepository, InMemoryUserRepository>(Lifestyle.Singleton);
+
+                container.Register<IProductRepository, InMemoryProductRepository>(Lifestyle.Singleton);
+                container.Register<IOrderRepository, InMemoryOrderRepository>(Lifestyle.Singleton);
+            }
+
         }
 
         private static IDocumentStore InitializeDocumentStore(Assembly assembly, bool createIndexes)

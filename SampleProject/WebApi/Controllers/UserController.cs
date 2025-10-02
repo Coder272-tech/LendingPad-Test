@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using BusinessEntities;
 using Core.Services.Users;
 using WebApi.Models.Users;
+using WebApi.Models;
+using static Core.Exceptions.UserExceptions;
 
 namespace WebApi.Controllers
 {
@@ -28,21 +31,53 @@ namespace WebApi.Controllers
         [HttpPost]
         public HttpResponseMessage CreateUser(Guid userId, [FromBody] UserModel model)
         {
-            var user = _createUserService.Create(userId, model.Name, model.Email, model.Type, model.AnnualSalary, model.Tags);
-            return Found(new UserData(user));
+            try
+            {
+                var user = _createUserService.Create(userId, model.Name, model.Email, model.Age, model.Type, model.AnnualSalary, model.Tags);
+                return Found(new UserData(user));
+            }
+            catch (UserAlreadyExistsException ex)
+            {
+                var error = new ApiError
+                {
+                    Message = ex.Message,
+                    Code = "USER_ALREADY_EXISTS" // optional
+                };
+                return Request.CreateResponse(HttpStatusCode.Conflict, error);
+            }
+
         }
 
         [Route("{userId:guid}/update")]
         [HttpPost]
         public HttpResponseMessage UpdateUser(Guid userId, [FromBody] UserModel model)
         {
-            var user = _getUserService.GetUser(userId);
-            if (user == null)
+            try
             {
-                return DoesNotExist();
+                var user = _getUserService.GetUser(userId);
+                if (user == null)
+                {
+                    return DoesNotExist();
+                }
+                _updateUserService.Update(user, model.Name, model.Email, model.Age, model.Type, model.AnnualSalary, model.Tags);
+                return Found(new UserData(user));
             }
-            _updateUserService.Update(user, model.Name, model.Email, model.Type, model.AnnualSalary, model.Tags);
-            return Found(new UserData(user));
+            catch (ArgumentNullException ex)
+            {
+                var error = new ApiError
+                {
+                    Message = ex.Message,
+                    Code = "NULL_ARGUMENT" // optional
+                };
+
+                /*
+                 400 Bad Request.
+                Reason: The client request was syntactically valid JSON, but semantically invalid for your business/domain rules (email cannot be null).
+                 */
+
+                return Request.CreateResponse(HttpStatusCode.BadRequest, error);
+            }
+            
         }
 
         [Route("{userId:guid}/delete")]
@@ -68,7 +103,7 @@ namespace WebApi.Controllers
 
         [Route("list")]
         [HttpGet]
-        public HttpResponseMessage GetUsers(int skip, int take, UserTypes? type = null, string name = null, string email = null)
+        public HttpResponseMessage GetUsers(int skip, int take, UserTypes? type = null, string name = null, string email = null, int? age = null)
         {
             var users = _getUserService.GetUsers(type, name, email)
                                        .Skip(skip).Take(take)
@@ -85,11 +120,35 @@ namespace WebApi.Controllers
             return Found();
         }
 
+        // 🔹 Debug endpoint: get all users
+        [HttpGet]
+        [Route("debug/all")]
+        public IHttpActionResult GetAllUsers()
+        {
+            var users = _getUserService.GetUsers()
+                .Select(u => new {
+                    u.Id,
+                    u.Name,
+                    u.Email,
+                    u.Type,
+                    u.Age,
+                    u.MonthlySalary,
+                    Tags = u.Tags.ToArray()
+                });
+
+            return Ok(users);
+        }
+
         [Route("list/tag")]
         [HttpGet]
         public HttpResponseMessage GetUsersByTag(string tag)
         {
-            throw new NotImplementedException();
+            // Call GetUsers with tag (null or empty tag will return all users)
+            var users = _getUserService.GetUsers(tag: string.IsNullOrWhiteSpace(tag) ? null : tag)
+                                       .Select(u => new UserData(u))
+                                       .ToList();
+
+            return Found(users);
         }
     }
 }
