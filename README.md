@@ -1,12 +1,6 @@
 # LendingPad Test
 
-## Important
-Please check out the tag **`test-complete`** from branch **`TT-1`** for the final submission.
-
-```bash
-git fetch --all --tags
-git checkout tags/test-complete
-```
+LendingPad technical assessment. Take home test solution.
 
 ## Known Issues
 - Missing roslyn folder ([Issue #1](https://github.com/Coder272-tech/LendingPad-Test/issues/1))
