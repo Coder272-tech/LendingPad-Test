@@ -2,6 +2,8 @@
 
 LendingPad technical assessment. Take home test solution.
 
+Original LendingPad instructions are in Email instructions.docx.pdf.
+
 ## Known Issues
 - Missing roslyn folder ([Issue #1](https://github.com/Coder272-tech/LendingPad-Test/issues/1))
 
